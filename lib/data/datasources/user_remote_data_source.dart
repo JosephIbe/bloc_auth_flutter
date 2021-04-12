@@ -11,7 +11,7 @@ abstract class UserRemoteDataSource {
   Future<UserModel> registerUser(Map<String, dynamic> body);
   // Future<User> sendOTP();
   // Future<User> verifyOTP();
-  Future<UserModel> getCurrentUser(String userId);
+  Future<UserModel> getCurrentUser();
   Future<void> logOut();
 }
 
@@ -30,14 +30,11 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     final accessToken = userResponseModel.accessToken;
     final refreshToken = userResponseModel.refreshToken;
 
-    await storage.write(key: APIConstants.ACCESS_TOKEN_KEY, value: accessToken)
-            .then((value) => print('AccessToken Written to FSS'));
-    await storage.write(key: APIConstants.REFRESH_TOKEN_KEY, value: refreshToken)
-            .then((value) => print('RefreshToken Written to FSS'));
+    await storage.write(key: APIConstants.ACCESS_TOKEN_KEY, value: accessToken);
+    await storage.write(key: APIConstants.REFRESH_TOKEN_KEY, value: refreshToken);
 
     String userId = userResponseModel.user.id;
-    await storage.write(key: APIConstants.USER_ID_KEY, value: userId)
-            .then((value) => print('UserID Written to FSS'));
+    await storage.write(key: APIConstants.USER_ID_KEY, value: userId);
 
     return userResponseModel.user;
   }
@@ -63,12 +60,20 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<UserModel> getCurrentUser(String id) {
-    return null;
+  Future<UserModel> getCurrentUser() async {
+    String userId = await storage.read(key: APIConstants.USER_ID_KEY);
+    print('UserId in GetCurrentUser() is $userId');
+    final response = await client.getUserProfile(pathSegment: 'current-user', userId: userId);
+    final user = UserResponseModel.fromJSON(response).user;
+    print('user in urds is \t $user');
+    return user;
   }
 
   @override
   Future<void> logOut() async {
+    String accessToken = await storage.read(key: APIConstants.ACCESS_TOKEN_KEY);
+    String refreshToken = await storage.read(key: APIConstants.REFRESH_TOKEN_KEY);
+    await repository.deleteTokens(accessToken, refreshToken);
     await client.postAuthData('logout', null);
   }
 

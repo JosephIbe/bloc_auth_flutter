@@ -26,10 +26,9 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<UserModel> getCurrentUser() async {
-    // final userId = await storage.read(key: APIConstants.USER_ID_KEY);
-    // final user = await dataSource.getCurrentUser(userId);
-    // return user;
-    return null;
+    final userModel = await dataSource.getCurrentUser();
+    print(userModel);
+    return userModel;
   }
 
   @override

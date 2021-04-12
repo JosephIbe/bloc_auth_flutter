@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_auth/data/core/api_client.dart';
+import 'package:flutter_bloc_auth/data/datasources/user_remote_data_source.dart';
+import 'package:flutter_bloc_auth/data/repositories/user_repository_impl.dart';
+import 'package:flutter_bloc_auth/domain/repositories/user_repository.dart';
 
 import 'explore/explore.dart';
 import 'favorites/favorites.dart';
@@ -22,6 +26,15 @@ class _HomeState extends State<Home> {
     Favorites(),
     Settings(),
   ];
+  UserRemoteDataSource dataSource;
+  UserRepository _repository;
+
+  @override
+  void initState() {
+    super.initState();
+    dataSource = UserRemoteDataSourceImpl(client: APIClient());
+    _repository = UserRepositoryImpl(dataSource: dataSource);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +51,7 @@ class _HomeState extends State<Home> {
           ],
           onTap: (value){
             setState(()=> currentIndex = value);
+            _repository.getCurrentUser();
           },
           showSelectedLabels: true,
           showUnselectedLabels: false,

@@ -41,6 +41,7 @@ class AuthenticationBloc
       final hasTokens = await _repository.checkHasTokens(event.accessToken, event.refreshToken);
       print('hasTokens $hasTokens');
       final currentUser = await _repository.getCurrentUser();
+      print('currentUser is\t $currentUser');
       // if(hasTokens && currentUser != null){
       if(hasTokens){
         yield AuthenticationStateAuthenticated(user: currentUser, );
