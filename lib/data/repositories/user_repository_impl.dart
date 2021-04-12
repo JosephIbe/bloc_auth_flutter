@@ -27,7 +27,6 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<UserModel> getCurrentUser() async {
     final userModel = await dataSource.getCurrentUser();
-    print(userModel);
     return userModel;
   }
 
@@ -35,7 +34,8 @@ class UserRepositoryImpl extends UserRepository {
   Future<void> logOut() async {
     storage = FlutterSecureStorage();
     await storage.delete(key: APIConstants.ACCESS_TOKEN_KEY);
-    await storage.write(key: APIConstants.REFRESH_TOKEN_KEY);
+    await storage.delete(key: APIConstants.REFRESH_TOKEN_KEY);
+    await storage.delete(key: APIConstants.USER_ID_KEY);
     await dataSource.logOut();
   }
 
@@ -46,12 +46,12 @@ class UserRepositoryImpl extends UserRepository {
     await storage.write(key: APIConstants.REFRESH_TOKEN_KEY, value: refreshToken);
   }
 
-  @override
-  Future<void> deleteTokens(String accessToken, String refreshToken) async {
-    storage = FlutterSecureStorage();
-    await storage.delete(key: APIConstants.ACCESS_TOKEN_KEY);
-    await storage.write(key: APIConstants.REFRESH_TOKEN_KEY);
-  }
+  // @override
+  // Future<void> deleteTokens(String accessToken, String refreshToken) async {
+  //   storage = FlutterSecureStorage();
+  //   await storage.delete(key: APIConstants.ACCESS_TOKEN_KEY);
+  //   await storage.write(key: APIConstants.REFRESH_TOKEN_KEY);
+  // }
 
   @override
   Future<bool> checkHasTokens(String accessToken, String refreshToken) async{

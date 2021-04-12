@@ -23,9 +23,9 @@ class APIClient {
         print(response.data);
         return response.data;
       } else {
-        print(response.statusCode);
-        print(response.statusMessage);
-        throw Exception(response.statusMessage);
+        // print(response.statusCode);
+        // print(response.statusMessage);
+        // throw Exception(response.statusMessage);
       }
     } on DioError catch (e) {
       if (e.response != null) {
@@ -40,14 +40,16 @@ class APIClient {
   }
 
   dynamic getUserProfile({String pathSegment, String userId}) async {
-    String token = await storage.read(key: APIConstants.ACCESS_TOKEN_KEY);
-    print('AccessToken in GetProfile() is $token');
-
-    dio.options.headers['authorization'] = 'Bearer $token';
-
-    Map<String, String> userIdMap = {"id": userId};
 
     try {
+
+      String token = await storage.read(key: APIConstants.ACCESS_TOKEN_KEY);
+      print('AccessToken in GetProfile() is $token');
+
+      dio.options.headers['authorization'] = 'Bearer $token';
+
+      Map<String, String> userIdMap = {"id": userId};
+
       Response response = await dio.post(
           '${APIConstants.PROD_BASE_URL}${APIConstants.USER_SEGMENT}/$pathSegment',
           // '${APIConstants.LOCAL_BASE_URL}${APIConstants.USER_SEGMENT}/$pathSegment',
@@ -56,18 +58,18 @@ class APIClient {
         print(response.data);
         return response.data;
       } else {
-        print(response.statusCode);
-        print(response.statusMessage);
-        throw Exception(response.statusMessage);
+        // print(response.statusCode);
+        // print(response.statusMessage);
+        // throw Exception(response.statusMessage);
       }
     } on DioError catch (err) {
       if (err.response != null) {
-        print(err.response.data);
-        print(err.response.headers);
-        print(err.response.request);
+        // print(err.response.data);
+        // print(err.response.headers);
+        // print(err.response.request);
       } else {
-        print(err.request);
-        print(err.message);
+        // print(err.request);
+        // print(err.message);
       }
     }
   }

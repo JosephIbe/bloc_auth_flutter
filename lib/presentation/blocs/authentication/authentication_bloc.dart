@@ -29,7 +29,6 @@ class AuthenticationBloc
     }
 
     if(event is UserLoggedOut){
-      await _repository.deleteTokens(event.accessToken, event.refreshToken);
       yield* _mapUserLoggedOutToState(event);
     }
 

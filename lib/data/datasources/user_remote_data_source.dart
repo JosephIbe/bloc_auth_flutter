@@ -30,11 +30,14 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     final accessToken = userResponseModel.accessToken;
     final refreshToken = userResponseModel.refreshToken;
 
-    await storage.write(key: APIConstants.ACCESS_TOKEN_KEY, value: accessToken);
-    await storage.write(key: APIConstants.REFRESH_TOKEN_KEY, value: refreshToken);
+    await storage.write(key: APIConstants.ACCESS_TOKEN_KEY, value: accessToken)
+        .then((value) => print('AccessToken Written to FSS'));
+    await storage.write(key: APIConstants.REFRESH_TOKEN_KEY, value: refreshToken)
+        .then((value) => print('RefreshToken Written to FSS'));
 
     String userId = userResponseModel.user.id;
-    await storage.write(key: APIConstants.USER_ID_KEY, value: userId);
+    await storage.write(key: APIConstants.USER_ID_KEY, value: userId)
+        .then((value) => print('UserID Written to FSS'));
 
     return userResponseModel.user;
   }
@@ -50,7 +53,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     await storage.write(key: APIConstants.ACCESS_TOKEN_KEY, value: accessToken)
           .then((value) => print('AccessToken Written to FSS'));
     await storage.write(key: APIConstants.REFRESH_TOKEN_KEY, value: refreshToken)
-          .then((value) => print('AccessToken Written to FSS'));
+          .then((value) => print('RefreshToken Written to FSS'));
 
     String userId = userResponseModel.user.id;
     await storage.write(key: APIConstants.USER_ID_KEY, value: userId)
@@ -61,19 +64,19 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<UserModel> getCurrentUser() async {
+    var user;
     String userId = await storage.read(key: APIConstants.USER_ID_KEY);
     print('UserId in GetCurrentUser() is $userId');
-    final response = await client.getUserProfile(pathSegment: 'current-user', userId: userId);
-    final user = UserResponseModel.fromJSON(response).user;
-    print('user in urds is \t $user');
-    return user;
+    if(userId != null){
+      final response = await client.getUserProfile(pathSegment: 'current-user', userId: userId);
+      user = UserResponseModel.fromJSON(response).user;
+      print('user in urds is \t $user');
+    }
+    return user ?? null;
   }
 
   @override
   Future<void> logOut() async {
-    String accessToken = await storage.read(key: APIConstants.ACCESS_TOKEN_KEY);
-    String refreshToken = await storage.read(key: APIConstants.REFRESH_TOKEN_KEY);
-    await repository.deleteTokens(accessToken, refreshToken);
     await client.postAuthData('logout', null);
   }
 
