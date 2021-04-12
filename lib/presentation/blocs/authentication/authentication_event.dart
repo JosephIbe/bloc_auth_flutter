@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_auth/data/models/user_model.dart';
+import 'package:flutter_bloc_auth/data/models/user_response_model.dart';
 
 @immutable
 abstract class AuthenticationEvent extends Equatable{
@@ -11,13 +12,27 @@ abstract class AuthenticationEvent extends Equatable{
   List<Object> get props => [];
 }
 
-class AppStarted extends AuthenticationEvent {}
+class AppStarted extends AuthenticationEvent {
+
+  final String accessToken;
+  final String refreshToken;
+
+  const AppStarted({@required this.accessToken, @required this.refreshToken});
+
+  @override
+  List<Object> get props => [accessToken, refreshToken];
+
+}
 
 class UserSignedUp extends AuthenticationEvent {
   final UserModel user;
+  final String accessToken;
+  final String refreshToken;
 
   const UserSignedUp({
     @required this.user,
+    @required this.accessToken,
+    @required this.refreshToken
   });
 
   @override
@@ -27,13 +42,14 @@ class UserSignedUp extends AuthenticationEvent {
 
 class UserLoggedIn extends AuthenticationEvent {
   final UserModel user;
-  // final String accessToken;
-  // final String refreshToken;
+  // final UserResponseModel user;
+  final String accessToken;
+  final String refreshToken;
 
   const UserLoggedIn({
     @required this.user,
-    // this.accessToken,
-    // this.refreshToken
+    @required this.accessToken,
+    @required this.refreshToken
   });
 
   @override
@@ -49,4 +65,16 @@ class UserRequestsOTP extends AuthenticationEvent {
 
 }
 
-class UserLoggedOut extends AuthenticationEvent {}
+class UserLoggedOut extends AuthenticationEvent {
+
+  final String accessToken;
+  final String refreshToken;
+
+  const UserLoggedOut({
+    @required this.accessToken,
+    @required this.refreshToken,
+  });
+
+  @override
+  List<Object> get props => [accessToken, refreshToken];
+}

@@ -13,4 +13,8 @@ class APIConstants {
   static const CURRENT_USER_URL = LOCAL_BASE_URL + USER_SEGMENT + '/current-user';
   // static const CURRENT_USER_URL = PROD_BASE_URL + USER_SEGMENT + '/current-user';
 
+  static const ACCESS_TOKEN_KEY = 'access_token';
+  static const REFRESH_TOKEN_KEY = 'refresh_token';
+  static const USER_ID_KEY = 'userId';
+
 }

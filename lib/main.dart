@@ -13,20 +13,21 @@ import 'presentation/journeys/main/home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  unawaited(SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]));
   unawaited(getIt.init());
-  runApp(
-      RepositoryProvider<UserRepository>(
-          create: (context) => UserRepositoryImpl(dataSource: getIt.getItInstance()),
-          child: BlocProvider<AuthenticationBloc>(
-            create: (_){
-              final userRepo = RepositoryProvider.of<UserRepository>(_);
-              return AuthenticationBloc(userRepo)..add(AppStarted());
-            },
-            child: MyApp(),
+  unawaited(SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) =>
+      runApp(
+          RepositoryProvider<UserRepository>(
+              create: (context) => UserRepositoryImpl(dataSource: getIt.getItInstance()),
+              child: BlocProvider<AuthenticationBloc>(
+                create: (_){
+                  final userRepo = RepositoryProvider.of<UserRepository>(_);
+                  return AuthenticationBloc(userRepo)..add(AppStarted());
+                },
+                child: MyApp(),
+              )
           )
       )
-  );
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -50,7 +51,6 @@ class MyApp extends StatelessWidget {
             return LoginPage();
           }
       ),
-      // home: CourseOverview(),
       onGenerateRoute: AppRouter.generateRoute,
     );
   }

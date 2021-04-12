@@ -1,7 +1,7 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_auth/data/models/user_model.dart';
+import 'package:flutter_bloc_auth/data/models/user_response_model.dart';
 
 @immutable
 abstract class AuthenticationState extends Equatable{

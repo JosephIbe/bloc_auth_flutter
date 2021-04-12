@@ -45,7 +45,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     try {
       final user = await _userRepository.registerUser(event.body);
       if(user != null){
-        _authenticationBloc.add(UserSignedUp(user: user));
+        _authenticationBloc.add(UserSignedUp(user: user, ));
         yield RegisterStateSuccess();
         // yield LoginStateInitial();
       } else {

@@ -31,12 +31,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if(user != null){
         _authenticationBloc.add(UserLoggedIn(user: user));
         yield LoginStateSuccess();
-        // yield LoginStateInitial();
       } else {
         yield LoginStateFailure(errorMessage: 'Something very weird just happened');
       }
-    // } on SocketException catch (e) {
-    //   yield LoginStateFailure(errorMessage: e.message);
     } catch (err){
       print(err);
       yield LoginStateFailure(errorMessage: 'Error Completing Your Request, Try Again!');
